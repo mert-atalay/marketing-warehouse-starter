@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harbour Fitness marketing report (synthetic data)</title>
+<style>
+:root { --bg:#f6f7f9; --card:#fff; --ink:#16202c; --muted:#5d6b7a; --line:#e3e7ec;
+        --a:#2563a8; --b:#e08a2b; --c:#2f8f6b; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#12161c; --card:#1b212a; --ink:#e8edf2; --muted:#9aa7b5; --line:#2b3440;
+          --a:#6aa6e8; --b:#f0a850; --c:#5fc49c; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+       font:15px/1.45 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+main { max-width:1080px; margin:0 auto; padding:28px 16px 40px; }
+h1 { font-size:22px; margin:0 0 4px; }
+h2 { font-size:15px; margin:0 0 12px; }
+.sub { color:var(--muted); margin:0 0 20px; }
+.grid { display:grid; gap:14px; }
+.kpis { grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); margin-bottom:14px; }
+.two { grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); margin-bottom:14px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+.kpi .label { color:var(--muted); font-size:13px; }
+.kpi .value { font-size:26px; font-weight:650; font-variant-numeric:tabular-nums; }
+table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+th, td { padding:7px 6px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+th:first-child, td:first-child { text-align:left; }
+th { color:var(--muted); font-weight:550; font-size:13px; }
+tr:last-child td { border-bottom:0; }
+.bar { display:inline-block; height:9px; border-radius:3px; background:var(--a); vertical-align:middle; margin-right:8px; }
+.legend { color:var(--muted); font-size:13px; margin-top:8px; }
+.dot { display:inline-block; width:10px; height:10px; border-radius:2px; margin:0 5px 0 12px; }
+.scroll { overflow-x:auto; }
+svg text { fill:var(--muted); font-size:12px; }
+footer { color:var(--muted); font-size:13px; margin-top:18px; }
+</style></head><body><main>
+<h1>Harbour Fitness: marketing performance</h1>
+<p class="sub">Synthetic data for a fictional business, January 2025 to June 2025.
+Built from the mart tables in this repository.</p>
+<div class="grid kpis"><div class="card kpi"><div class="label">Ad spend</div><div class="value">$302,363</div></div><div class="card kpi"><div class="label">Leads</div><div class="value">12,567</div></div><div class="card kpi"><div class="label">Cost per lead</div><div class="value">$24.06</div></div><div class="card kpi"><div class="label">Trials</div><div class="value">5,063</div></div><div class="card kpi"><div class="label">Members</div><div class="value">2,573</div></div><div class="card kpi"><div class="label">Cost per member</div><div class="value">$117.51</div></div></div>
+<div class="grid two">
+  <div class="card"><h2>Spend and leads by month</h2><svg viewBox="0 0 460 220" role="img" aria-label="Monthly spend and leads" width="100%"><rect x="20.6" y="10.0" width="22.2" height="184.0" rx="2" fill="var(--a)"><title>Jan: $66,517 spend</title></rect><rect x="45.8" y="10.0" width="22.2" height="184.0" rx="2" fill="var(--b)"><title>Jan: 2,834 leads</title></rect><text x="42.8" y="212" text-anchor="middle">Jan</text><rect x="94.6" y="71.2" width="22.2" height="122.8" rx="2" fill="var(--a)"><title>Feb: $44,377 spend</title></rect><rect x="119.8" y="73.4" width="22.2" height="120.6" rx="2" fill="var(--b)"><title>Feb: 1,857 leads</title></rect><text x="116.8" y="212" text-anchor="middle">Feb</text><rect x="168.6" y="60.2" width="22.2" height="133.8" rx="2" fill="var(--a)"><title>Mar: $48,365 spend</title></rect><rect x="193.8" y="66.9" width="22.2" height="127.1" rx="2" fill="var(--b)"><title>Mar: 1,958 leads</title></rect><text x="190.8" y="212" text-anchor="middle">Mar</text><rect x="242.6" y="62.5" width="22.2" height="131.5" rx="2" fill="var(--a)"><title>Apr: $47,555 spend</title></rect><rect x="267.8" y="66.2" width="22.2" height="127.8" rx="2" fill="var(--b)"><title>Apr: 1,969 leads</title></rect><text x="264.8" y="212" text-anchor="middle">Apr</text><rect x="316.6" y="59.7" width="22.2" height="134.3" rx="2" fill="var(--a)"><title>May: $48,532 spend</title></rect><rect x="341.8" y="63.5" width="22.2" height="130.5" rx="2" fill="var(--b)"><title>May: 2,010 leads</title></rect><text x="338.8" y="212" text-anchor="middle">May</text><rect x="390.6" y="63.9" width="22.2" height="130.1" rx="2" fill="var(--a)"><title>Jun: $47,016 spend</title></rect><rect x="415.8" y="68.1" width="22.2" height="125.9" rx="2" fill="var(--b)"><title>Jun: 1,939 leads</title></rect><text x="412.8" y="212" text-anchor="middle">Jun</text></svg>
+    <div class="legend"><span class="dot" style="background:var(--a);margin-left:0"></span>Ad spend
+    <span class="dot" style="background:var(--b)"></span>Leads (separate scales)</div></div>
+  <div class="card"><h2>Lead funnel by channel group</h2><div class="scroll"><table>
+    <tr><th>Channel</th><th>Leads</th><th>Trials</th><th>Members</th><th>To trial</th><th>To member</th></tr>
+    <tr><td>organic_search</td><td>3,318</td><td>1,463</td><td>767</td><td>44%</td><td>23%</td></tr><tr><td>paid_search</td><td>3,311</td><td>1,415</td><td>721</td><td>43%</td><td>22%</td></tr><tr><td>paid_social</td><td>2,953</td><td>879</td><td>364</td><td>30%</td><td>12%</td></tr><tr><td>direct</td><td>1,855</td><td>723</td><td>384</td><td>39%</td><td>21%</td></tr><tr><td>email</td><td>589</td><td>293</td><td>175</td><td>50%</td><td>30%</td></tr><tr><td>referral</td><td>541</td><td>290</td><td>162</td><td>54%</td><td>30%</td></tr></table></div></div>
+</div>
+<div class="card"><h2>Locations, lowest cost per member first</h2><div class="scroll"><table>
+  <tr><th>Location</th><th>Spend</th><th>Leads</th><th>Cost per lead</th><th>Members</th><th>Cost per member</th></tr>
+  <tr><td>Harbour Fitness Oakfield</td><td>$14,901</td><td>682</td><td>$21.85</td><td>148</td><td><span class="bar" style="width:54px"></span>$100.68</td></tr><tr><td>Harbour Fitness Brookside</td><td>$19,855</td><td>847</td><td>$23.44</td><td>185</td><td><span class="bar" style="width:57px"></span>$107.32</td></tr><tr><td>Harbour Fitness Hillcrest</td><td>$22,213</td><td>925</td><td>$24.01</td><td>205</td><td><span class="bar" style="width:58px"></span>$108.36</td></tr><tr><td>Harbour Fitness Downtown</td><td>$39,536</td><td>1,647</td><td>$24.00</td><td>350</td><td><span class="bar" style="width:60px"></span>$112.96</td></tr><tr><td>Harbour Fitness Riverside</td><td>$29,259</td><td>1,210</td><td>$24.18</td><td>258</td><td><span class="bar" style="width:61px"></span>$113.41</td></tr><tr><td>Harbour Fitness Northgate</td><td>$27,477</td><td>1,085</td><td>$25.32</td><td>239</td><td><span class="bar" style="width:61px"></span>$114.97</td></tr><tr><td>Harbour Fitness Midtown</td><td>$34,587</td><td>1,415</td><td>$24.44</td><td>286</td><td><span class="bar" style="width:65px"></span>$120.93</td></tr><tr><td>Harbour Fitness Eastside</td><td>$24,882</td><td>1,030</td><td>$24.16</td><td>201</td><td><span class="bar" style="width:66px"></span>$123.79</td></tr><tr><td>Harbour Fitness Westbrook</td><td>$24,894</td><td>1,026</td><td>$24.26</td><td>200</td><td><span class="bar" style="width:66px"></span>$124.47</td></tr><tr><td>Harbour Fitness Seaview</td><td>$17,802</td><td>753</td><td>$23.64</td><td>142</td><td><span class="bar" style="width:67px"></span>$125.37</td></tr><tr><td>Harbour Fitness Lakeview</td><td>$17,579</td><td>712</td><td>$24.69</td><td>135</td><td><span class="bar" style="width:70px"></span>$130.22</td></tr><tr><td>Harbour Fitness Southport</td><td>$29,377</td><td>1,235</td><td>$23.79</td><td>224</td><td><span class="bar" style="width:70px"></span>$131.15</td></tr></table></div></div>
+<footer>Cost per lead and cost per member divide all ad spend by all leads or members,
+including unpaid ones. Members are counted in the month their lead was created.</footer>
+</main></body></html>
