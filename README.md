@@ -4,6 +4,10 @@ I built this to show how I lay out a small marketing data warehouse: raw ad, web
 
 **The data is synthetic and the business is fictional.** "Harbour Fitness" is a made-up gym chain with 12 locations. A seeded Python script generates every row. This is a starter and a teaching example. It is not a production system, and nothing here comes from a real company.
 
+![A report page built from the mart tables: totals, spend and leads by month, the lead funnel by channel, and cost per member by location](docs/report.png)
+
+*The example report, built from the mart tables by `python -m runner.report`. All numbers are synthetic.*
+
 The models are written as a [Dataform](https://cloud.google.com/dataform) project for BigQuery. A small Python runner executes the same `.sqlx` files on DuckDB, so you can build and test everything on a laptop without a cloud account.
 
 ## What it models
@@ -108,6 +112,8 @@ SELECT month_start, location_name, spend, leads, cost_per_lead, members, cost_pe
 FROM marts.fct_location_performance
 ORDER BY month_start, location_name;
 ```
+
+To see the result as a page, run `uv run python -m runner.report`. It writes `report.html`, a single self-contained file with no scripts. A copy is in [`docs/example-report.html`](docs/example-report.html).
 
 Run the tests with `uv run pytest`. There is also a Makefile: `make data`, `make build`, `make test`, or `make all`.
 
