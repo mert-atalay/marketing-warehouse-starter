@@ -1,0 +1,40 @@
+config {
+  type: "assertion",
+  description: "Ad spend in both marts equals ad spend in the raw ad tables, month by month. A join that drops or duplicates rows on the way to a mart shows up here. Returns the months that differ by more than one cent."
+}
+
+WITH raw_daily AS (
+  SELECT CAST(segments_date AS DATE) AS date_day, cost_micros / 1000000.0 AS spend
+  FROM ${ref("google_ads_campaign_stats")}
+  UNION ALL
+  SELECT CAST(date_start AS DATE) AS date_day, spend
+  FROM ${ref("meta_ads_campaign_stats")}
+),
+
+totals AS (
+  SELECT d.month_start, r.spend AS raw_spend, 0.0 AS daily_mart_spend, 0.0 AS location_mart_spend
+  FROM raw_daily AS r
+  INNER JOIN ${ref("dates")} AS d
+    ON r.date_day = CAST(d.date_day AS DATE)
+  UNION ALL
+  SELECT month_start, 0.0 AS raw_spend, spend AS daily_mart_spend, 0.0 AS location_mart_spend
+  FROM ${ref("fct_daily_channel_performance")}
+  UNION ALL
+  SELECT month_start, 0.0 AS raw_spend, 0.0 AS daily_mart_spend, spend AS location_mart_spend
+  FROM ${ref("fct_location_performance")}
+),
+
+compared AS (
+  SELECT
+    CAST(month_start AS DATE) AS month_start,
+    SUM(raw_spend) AS raw_spend,
+    SUM(daily_mart_spend) AS daily_mart_spend,
+    SUM(location_mart_spend) AS location_mart_spend
+  FROM totals
+  GROUP BY CAST(month_start AS DATE)
+)
+
+SELECT month_start, raw_spend, daily_mart_spend, location_mart_spend
+FROM compared
+WHERE ABS(raw_spend - daily_mart_spend) > 0.01
+  OR ABS(raw_spend - location_mart_spend) > 0.01

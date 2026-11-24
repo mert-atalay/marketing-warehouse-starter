@@ -1,0 +1,12 @@
+# Dataform project settings. Replace defaultProject before deploying to BigQuery.
+defaultProject: your-gcp-project-id
+defaultLocation: US
+defaultDataset: marts
+defaultAssertionDataset: assertions
+dataformCoreVersion: 3.1.7
+
+vars:
+  # The freshness assertion compares the newest mart date with this date.
+  # The synthetic data ends on 2025-06-30, so the date is pinned here.
+  freshness_as_of: "2025-06-30"
+  freshness_max_lag_days: "1"

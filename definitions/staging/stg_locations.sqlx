@@ -1,0 +1,12 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "Location dimension. One row per location."
+}
+
+SELECT
+  location_id,
+  location_name,
+  region,
+  CAST(opened_date AS DATE) AS opened_date
+FROM ${ref("locations")}

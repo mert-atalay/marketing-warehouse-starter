@@ -1,0 +1,46 @@
+config {
+  type: "view",
+  schema: "intermediate",
+  description: "One row per lead with the stage history pivoted into dates and flags. Day gaps come from the date dimension, not from a date function."
+}
+
+WITH stage_dates AS (
+  SELECT
+    lead_id,
+    MIN(CASE WHEN stage = 'trial' THEN event_date END) AS trial_date,
+    MIN(CASE WHEN stage = 'member' THEN event_date END) AS member_date,
+    MIN(CASE WHEN stage = 'lost' THEN event_date END) AS lost_date
+  FROM ${ref("stg_crm_lead_stage_events")}
+  GROUP BY lead_id
+)
+
+SELECT
+  l.lead_id,
+  l.created_date,
+  l.location_id,
+  l.source,
+  l.medium,
+  l.campaign,
+  s.trial_date,
+  s.member_date,
+  s.lost_date,
+  CASE WHEN s.trial_date IS NOT NULL THEN 1 ELSE 0 END AS is_trial,
+  CASE WHEN s.member_date IS NOT NULL THEN 1 ELSE 0 END AS is_member,
+  CASE WHEN s.lost_date IS NOT NULL THEN 1 ELSE 0 END AS is_lost,
+  CASE
+    WHEN s.member_date IS NOT NULL THEN 'member'
+    WHEN s.lost_date IS NOT NULL THEN 'lost'
+    WHEN s.trial_date IS NOT NULL THEN 'trial'
+    ELSE 'lead'
+  END AS current_stage,
+  trial_day.day_seq - created_day.day_seq AS days_to_trial,
+  member_day.day_seq - created_day.day_seq AS days_to_member
+FROM ${ref("stg_crm_leads")} AS l
+LEFT JOIN stage_dates AS s
+  ON l.lead_id = s.lead_id
+LEFT JOIN ${ref("stg_dates")} AS created_day
+  ON l.created_date = created_day.date_day
+LEFT JOIN ${ref("stg_dates")} AS trial_day
+  ON s.trial_date = trial_day.date_day
+LEFT JOIN ${ref("stg_dates")} AS member_day
+  ON s.member_date = member_day.date_day

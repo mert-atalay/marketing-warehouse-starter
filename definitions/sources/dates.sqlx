@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  schema: "raw",
+  name: "dates",
+  description: "Calendar. One row per day with week_start and month_start precomputed."
+}

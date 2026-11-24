@@ -1,0 +1,16 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "Date dimension. One row per day. Models join to this instead of calling date functions, which differ between warehouses. day_seq is a running day number, so the gap between two dates is a subtraction."
+}
+
+SELECT
+  CAST(date_day AS DATE) AS date_day,
+  day_seq,
+  CAST(week_start AS DATE) AS week_start,
+  CAST(month_start AS DATE) AS month_start,
+  year_number,
+  month_number,
+  day_of_week,
+  is_weekend
+FROM ${ref("dates")}

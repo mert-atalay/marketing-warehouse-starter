@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  schema: "raw",
+  name: "crm_lead_stage_events",
+  description: "CRM stage history. One row per lead and stage reached: lead, trial, member, lost."
+}

@@ -1,0 +1,11 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "CRM stage history. One row per lead and stage reached."
+}
+
+SELECT
+  lead_id,
+  LOWER(TRIM(stage)) AS stage,
+  CAST(event_date AS DATE) AS event_date
+FROM ${ref("crm_lead_stage_events")}

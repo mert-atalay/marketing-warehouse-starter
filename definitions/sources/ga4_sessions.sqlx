@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  schema: "raw",
+  name: "ga4_sessions",
+  description: "GA4-like daily sessions and form submits by location, source, medium and campaign."
+}

@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Generate data, build on DuckDB, run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: uv run python -m generator
+      - run: uv run python -m runner
+      - run: uv run pytest
+
+  dataform:
+    name: Dataform compile (no cloud credentials)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: npx --yes @dataform/cli@3.1.7 compile
+      # Checks that the local runner produces the same SQL as the Dataform compiler.
+      - run: uv run pytest tests/test_dataform_parity.py
+        env:
+          RUN_DATAFORM_COMPILE: "1"

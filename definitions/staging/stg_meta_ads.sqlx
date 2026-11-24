@@ -1,0 +1,17 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "Meta Ads daily campaign stats. Source and medium are fixed to match the UTM tagging of these campaigns."
+}
+
+SELECT
+  CAST(date_start AS DATE) AS date_day,
+  location_id,
+  campaign_id,
+  'facebook' AS source,
+  'paid_social' AS medium,
+  LOWER(TRIM(campaign_name)) AS campaign,
+  impressions,
+  clicks,
+  spend
+FROM ${ref("meta_ads_campaign_stats")}

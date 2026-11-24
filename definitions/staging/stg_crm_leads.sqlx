@@ -1,0 +1,14 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "CRM leads with UTM values cleaned. Casing and stray spaces are normalised. Missing values get the same placeholders GA4 uses, so leads join to sessions and spend on source, medium and campaign."
+}
+
+SELECT
+  lead_id,
+  CAST(created_date AS DATE) AS created_date,
+  location_id,
+  COALESCE(LOWER(TRIM(utm_source)), '(direct)') AS source,
+  COALESCE(LOWER(TRIM(utm_medium)), '(none)') AS medium,
+  COALESCE(LOWER(TRIM(utm_campaign)), '(not set)') AS campaign
+FROM ${ref("crm_leads")}

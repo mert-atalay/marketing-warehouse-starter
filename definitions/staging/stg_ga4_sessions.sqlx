@@ -1,0 +1,15 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "Web sessions and form submits. One row per day, location, source, medium and campaign."
+}
+
+SELECT
+  CAST(event_date AS DATE) AS date_day,
+  location_id,
+  LOWER(TRIM(source)) AS source,
+  LOWER(TRIM(medium)) AS medium,
+  LOWER(TRIM(campaign)) AS campaign,
+  sessions,
+  form_submits
+FROM ${ref("ga4_sessions")}

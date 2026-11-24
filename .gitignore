@@ -1,0 +1,12 @@
+# Generated data and the local warehouse. Recreate with `make data build`.
+data/
+*.duckdb
+*.duckdb.wal
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+
+# Node (only used for `dataform compile`)
+node_modules/

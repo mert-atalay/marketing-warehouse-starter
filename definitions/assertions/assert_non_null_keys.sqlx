@@ -1,0 +1,31 @@
+config {
+  type: "assertion",
+  description: "Key columns are never null. Returns one row per model with the number of rows that have a null key."
+}
+
+SELECT model, null_key_rows
+FROM (
+  SELECT 'int_leads_enriched' AS model, COUNT(*) AS null_key_rows
+  FROM ${ref("int_leads_enriched")}
+  WHERE lead_id IS NULL OR created_date IS NULL OR location_id IS NULL
+
+  UNION ALL
+
+  SELECT 'fct_daily_channel_performance' AS model, COUNT(*) AS null_key_rows
+  FROM ${ref("fct_daily_channel_performance")}
+  WHERE date_day IS NULL OR week_start IS NULL OR month_start IS NULL OR location_id IS NULL
+    OR source IS NULL OR medium IS NULL OR campaign IS NULL OR channel_group IS NULL
+
+  UNION ALL
+
+  SELECT 'fct_location_performance' AS model, COUNT(*) AS null_key_rows
+  FROM ${ref("fct_location_performance")}
+  WHERE month_start IS NULL OR location_id IS NULL OR location_name IS NULL
+
+  UNION ALL
+
+  SELECT 'fct_lead_funnel' AS model, COUNT(*) AS null_key_rows
+  FROM ${ref("fct_lead_funnel")}
+  WHERE cohort_month IS NULL OR location_id IS NULL OR channel_group IS NULL
+) AS checks
+WHERE null_key_rows > 0

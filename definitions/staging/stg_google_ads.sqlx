@@ -1,0 +1,17 @@
+config {
+  type: "view",
+  schema: "staging",
+  description: "Google Ads daily campaign stats with cost converted from micros to currency units. Source and medium are fixed to match the UTM tagging of these campaigns."
+}
+
+SELECT
+  CAST(segments_date AS DATE) AS date_day,
+  location_id,
+  campaign_id,
+  'google' AS source,
+  'cpc' AS medium,
+  LOWER(TRIM(campaign_name)) AS campaign,
+  impressions,
+  clicks,
+  cost_micros / 1000000.0 AS spend
+FROM ${ref("google_ads_campaign_stats")}

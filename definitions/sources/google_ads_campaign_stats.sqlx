@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  schema: "raw",
+  name: "google_ads_campaign_stats",
+  description: "Google Ads daily campaign stats. Cost is in micros, as in the Google Ads API."
+}

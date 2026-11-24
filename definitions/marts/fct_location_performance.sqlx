@@ -1,0 +1,40 @@
+config {
+  type: "table",
+  schema: "marts",
+  description: "Monthly results per location. One row per month and location. cost_per_lead and cost_per_member are blended: all ad spend divided by all leads or members, paid or not. cost_per_paid_lead uses only leads from paid channels."
+}
+
+WITH monthly AS (
+  SELECT
+    month_start,
+    location_id,
+    SUM(sessions) AS sessions,
+    SUM(form_submits) AS form_submits,
+    SUM(spend) AS spend,
+    SUM(leads) AS leads,
+    SUM(CASE WHEN channel_group IN ('paid_search', 'paid_social') THEN leads ELSE 0 END) AS paid_leads,
+    SUM(trials) AS trials,
+    SUM(members) AS members
+  FROM ${ref("fct_daily_channel_performance")}
+  GROUP BY month_start, location_id
+)
+
+SELECT
+  m.month_start,
+  m.location_id,
+  l.location_name,
+  l.region,
+  m.sessions,
+  m.form_submits,
+  m.spend,
+  m.leads,
+  m.paid_leads,
+  m.trials,
+  m.members,
+  m.spend / NULLIF(m.leads, 0) AS cost_per_lead,
+  m.spend / NULLIF(m.paid_leads, 0) AS cost_per_paid_lead,
+  m.spend / NULLIF(m.trials, 0) AS cost_per_trial,
+  m.spend / NULLIF(m.members, 0) AS cost_per_member
+FROM monthly AS m
+INNER JOIN ${ref("stg_locations")} AS l
+  ON m.location_id = l.location_id

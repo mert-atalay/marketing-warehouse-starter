@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  schema: "raw",
+  name: "meta_ads_campaign_stats",
+  description: "Meta Ads daily campaign stats."
+}

@@ -1,0 +1,77 @@
+config {
+  type: "table",
+  schema: "marts",
+  description: "Sessions, ad spend and leads side by side. One row per day, location, source, medium and campaign. Leads, trials and members are counted on the day the lead was created and attributed by the UTM values on the lead (last touch)."
+}
+
+WITH stacked AS (
+  SELECT
+    date_day, location_id, source, medium, campaign,
+    sessions, form_submits,
+    0 AS impressions, 0 AS clicks, 0.0 AS spend,
+    0 AS leads, 0 AS trials, 0 AS members
+  FROM ${ref("stg_ga4_sessions")}
+
+  UNION ALL
+
+  SELECT
+    date_day, location_id, source, medium, campaign,
+    0 AS sessions, 0 AS form_submits,
+    impressions, clicks, spend,
+    0 AS leads, 0 AS trials, 0 AS members
+  FROM ${ref("int_ad_spend_daily")}
+
+  UNION ALL
+
+  SELECT
+    date_day, location_id, source, medium, campaign,
+    0 AS sessions, 0 AS form_submits,
+    0 AS impressions, 0 AS clicks, 0.0 AS spend,
+    leads, trials, members
+  FROM ${ref("int_leads_daily")}
+),
+
+combined AS (
+  SELECT
+    date_day,
+    location_id,
+    source,
+    medium,
+    campaign,
+    SUM(sessions) AS sessions,
+    SUM(form_submits) AS form_submits,
+    SUM(impressions) AS impressions,
+    SUM(clicks) AS clicks,
+    SUM(spend) AS spend,
+    SUM(leads) AS leads,
+    SUM(trials) AS trials,
+    SUM(members) AS members
+  FROM stacked
+  GROUP BY date_day, location_id, source, medium, campaign
+)
+
+SELECT
+  c.date_day,
+  d.week_start,
+  d.month_start,
+  c.location_id,
+  g.channel_group,
+  c.source,
+  c.medium,
+  c.campaign,
+  c.sessions,
+  c.form_submits,
+  c.impressions,
+  c.clicks,
+  c.spend,
+  c.leads,
+  c.trials,
+  c.members,
+  c.spend / NULLIF(c.clicks, 0) AS cost_per_click,
+  c.spend / NULLIF(c.leads, 0) AS cost_per_lead
+FROM combined AS c
+INNER JOIN ${ref("stg_dates")} AS d
+  ON c.date_day = d.date_day
+INNER JOIN ${ref("int_channel_groups")} AS g
+  ON c.source = g.source
+  AND c.medium = g.medium

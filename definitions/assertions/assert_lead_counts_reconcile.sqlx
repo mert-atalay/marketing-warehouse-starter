@@ -1,0 +1,16 @@
+config {
+  type: "assertion",
+  description: "The number of leads in each mart equals the number of rows in the raw CRM leads table. Returns one row if any count differs."
+}
+
+SELECT raw_leads, daily_mart_leads, location_mart_leads, funnel_mart_leads
+FROM (
+  SELECT
+    (SELECT COUNT(*) FROM ${ref("crm_leads")}) AS raw_leads,
+    (SELECT SUM(leads) FROM ${ref("fct_daily_channel_performance")}) AS daily_mart_leads,
+    (SELECT SUM(leads) FROM ${ref("fct_location_performance")}) AS location_mart_leads,
+    (SELECT SUM(leads) FROM ${ref("fct_lead_funnel")}) AS funnel_mart_leads
+) AS counts
+WHERE raw_leads <> COALESCE(daily_mart_leads, 0)
+  OR raw_leads <> COALESCE(location_mart_leads, 0)
+  OR raw_leads <> COALESCE(funnel_mart_leads, 0)

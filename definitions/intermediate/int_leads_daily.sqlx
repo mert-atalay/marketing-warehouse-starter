@@ -1,0 +1,17 @@
+config {
+  type: "view",
+  schema: "intermediate",
+  description: "Leads counted by the day the lead was created, with how many of those leads later reached trial and member. One row per day, location, source, medium and campaign."
+}
+
+SELECT
+  created_date AS date_day,
+  location_id,
+  source,
+  medium,
+  campaign,
+  COUNT(*) AS leads,
+  SUM(is_trial) AS trials,
+  SUM(is_member) AS members
+FROM ${ref("int_leads_enriched")}
+GROUP BY created_date, location_id, source, medium, campaign

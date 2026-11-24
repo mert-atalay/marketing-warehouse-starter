@@ -1,0 +1,18 @@
+[project]
+name = "marketing-warehouse-starter"
+version = "0.1.0"
+description = "Starter marketing data warehouse on synthetic data: Dataform models for BigQuery, tested locally with DuckDB."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.1",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

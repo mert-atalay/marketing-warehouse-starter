@@ -1,0 +1,26 @@
+config {
+  type: "table",
+  schema: "marts",
+  description: "Lead funnel by cohort. One row per lead-created month, location and channel group. Recent cohorts are incomplete because their leads have had less time to book a trial or join."
+}
+
+SELECT
+  d.month_start AS cohort_month,
+  le.location_id,
+  g.channel_group,
+  COUNT(*) AS leads,
+  SUM(le.is_trial) AS trials,
+  SUM(le.is_member) AS members,
+  SUM(le.is_lost) AS lost,
+  SUM(CASE WHEN le.is_member = 0 AND le.is_lost = 0 THEN 1 ELSE 0 END) AS open_leads,
+  SUM(le.is_trial) / NULLIF(COUNT(*), 0) AS lead_to_trial_rate,
+  SUM(le.is_member) / NULLIF(SUM(le.is_trial), 0) AS trial_to_member_rate,
+  AVG(le.days_to_trial) AS avg_days_to_trial,
+  AVG(le.days_to_member) AS avg_days_to_member
+FROM ${ref("int_leads_enriched")} AS le
+INNER JOIN ${ref("stg_dates")} AS d
+  ON le.created_date = d.date_day
+INNER JOIN ${ref("int_channel_groups")} AS g
+  ON le.source = g.source
+  AND le.medium = g.medium
+GROUP BY d.month_start, le.location_id, g.channel_group

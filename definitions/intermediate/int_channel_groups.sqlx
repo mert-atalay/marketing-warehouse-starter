@@ -1,0 +1,25 @@
+config {
+  type: "view",
+  schema: "intermediate",
+  description: "Maps every source and medium pair seen in sessions, ads or leads to a channel group. This is the only place the grouping rules live."
+}
+
+SELECT
+  source,
+  medium,
+  CASE
+    WHEN medium = 'cpc' THEN 'paid_search'
+    WHEN medium = 'paid_social' THEN 'paid_social'
+    WHEN medium = 'organic' THEN 'organic_search'
+    WHEN medium = 'email' THEN 'email'
+    WHEN medium = 'referral' THEN 'referral'
+    WHEN source = '(direct)' AND medium = '(none)' THEN 'direct'
+    ELSE 'other'
+  END AS channel_group
+FROM (
+  SELECT source, medium FROM ${ref("stg_ga4_sessions")}
+  UNION DISTINCT
+  SELECT source, medium FROM ${ref("int_ad_spend_daily")}
+  UNION DISTINCT
+  SELECT source, medium FROM ${ref("stg_crm_leads")}
+) AS pairs

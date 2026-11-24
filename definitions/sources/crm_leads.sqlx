@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  schema: "raw",
+  name: "crm_leads",
+  description: "CRM leads with the UTM values captured on the form. One row per lead."
+}

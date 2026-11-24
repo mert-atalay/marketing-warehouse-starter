@@ -1,0 +1,30 @@
+config {
+  type: "assertion",
+  description: "Row freshness. The newest day in the daily mart is at most freshness_max_lag_days behind freshness_as_of (both set in workflow_settings.yaml). The lag is counted in date dimension rows. Also fails if the mart is empty."
+}
+
+WITH latest AS (
+  SELECT MAX(date_day) AS latest_date
+  FROM ${ref("fct_daily_channel_performance")}
+),
+
+staleness AS (
+  SELECT
+    latest.latest_date,
+    SUM(
+      CASE
+        WHEN d.date_day > latest.latest_date
+          AND d.date_day <= CAST('${dataform.projectConfig.vars.freshness_as_of}' AS DATE)
+          THEN 1
+        ELSE 0
+      END
+    ) AS days_behind
+  FROM latest
+  CROSS JOIN ${ref("stg_dates")} AS d
+  GROUP BY latest.latest_date
+)
+
+SELECT latest_date, days_behind
+FROM staleness
+WHERE latest_date IS NULL
+  OR days_behind > ${dataform.projectConfig.vars.freshness_max_lag_days}

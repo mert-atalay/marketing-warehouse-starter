@@ -1,0 +1,18 @@
+config {
+  type: "assertion",
+  description: "A funnel only narrows: members <= trials <= leads in every funnel row, and no lead is a member without a trial. Returns the rows that break this."
+}
+
+SELECT
+  'fct_lead_funnel' AS model,
+  CONCAT(CAST(cohort_month AS STRING), '|', CAST(location_id AS STRING), '|', channel_group) AS key_value
+FROM ${ref("fct_lead_funnel")}
+WHERE members > trials OR trials > leads OR lost + members > leads
+
+UNION ALL
+
+SELECT 'int_leads_enriched' AS model, lead_id AS key_value
+FROM ${ref("int_leads_enriched")}
+WHERE (is_member = 1 AND is_trial = 0)
+  OR trial_date < created_date
+  OR member_date < trial_date

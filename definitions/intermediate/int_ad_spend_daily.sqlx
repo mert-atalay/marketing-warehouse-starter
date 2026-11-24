@@ -1,0 +1,23 @@
+config {
+  type: "view",
+  schema: "intermediate",
+  description: "Google Ads and Meta Ads stacked into one shape. One row per day, location, source, medium and campaign."
+}
+
+SELECT
+  date_day,
+  location_id,
+  source,
+  medium,
+  campaign,
+  SUM(impressions) AS impressions,
+  SUM(clicks) AS clicks,
+  SUM(spend) AS spend
+FROM (
+  SELECT date_day, location_id, source, medium, campaign, impressions, clicks, spend
+  FROM ${ref("stg_google_ads")}
+  UNION ALL
+  SELECT date_day, location_id, source, medium, campaign, impressions, clicks, spend
+  FROM ${ref("stg_meta_ads")}
+) AS stacked
+GROUP BY date_day, location_id, source, medium, campaign
