@@ -2,6 +2,8 @@
 
 I built this to show how I lay out a small marketing data warehouse: raw ad, web and CRM data in, tested reporting tables out.
 
+Related case study on [mertatalay.com](https://mertatalay.com): [A marketing warehouse that checks itself](https://mertatalay.com/work/marketing-warehouse/).
+
 **The data is synthetic and the business is fictional.** "Harbour Fitness" is a made-up gym chain with 12 locations. A seeded Python script generates every row. This is a starter and a teaching example. It is not a production system, and nothing here comes from a real company.
 
 ![A report page built from the mart tables: totals, spend and leads by month, the lead funnel by channel, and cost per member by location](docs/report.png)
